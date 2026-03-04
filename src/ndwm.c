@@ -73,9 +73,7 @@ static void scan(void);
 static bool send_event(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void showhide(Client *c);
 static Client *window_to_client(Window w);
-static void make_master(const Arg *arg);
 static void move_client_next(const Arg *arg);
-static void rotate_clients(const Arg *arg);
 
 /* Setup function */
 static void setup(void);
@@ -144,7 +142,6 @@ static void update_bar_pos(Monitor *m);
 static void focus_previous(const Arg *arg);
 static void focus_next(const Arg *arg);
 static void toggle_fullscreen(const Arg *arg);
-static void quit(const Arg *arg);
 static void view(const Arg *arg);
 static void spawn(const Arg *arg);
 static void toggle_floating(const Arg *arg);
@@ -212,7 +209,6 @@ static int screen_width, sh;           /* X display screen width and height */
 static int lrpad;            /* Sum of left and right padding for text */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
 static unsigned int numlockmask = 0;
-static bool running = true;
 static Cur *cursor[CurLast];
 static Clr **scheme;
 static Display *dpy;
@@ -232,29 +228,12 @@ Systray *systray_init(Monitor *m, XSetWindowAttributes *window_attrs)
     window_attrs->override_redirect = True;
     window_attrs->background_pixel  = scheme[SchemeNorm][ColBg].pixel;
     XSelectInput(dpy, new_systray->win, SubstructureNotifyMask);
-    XChangeProperty(dpy, new_systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&netatom[NetSystemTrayOrientationHorz], 1);
+    XChangeProperty(dpy, new_systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32, 
+		    PropModeReplace, (unsigned char *)&netatom[NetSystemTrayOrientationHorz], 1);
     XChangeWindowAttributes(dpy, new_systray->win, CWEventMask|CWOverrideRedirect|CWBackPixel, window_attrs);
     XMapRaised(dpy, new_systray->win);
     XSetSelectionOwner(dpy, netatom[NetSystemTray], new_systray->win, CurrentTime);
     return new_systray;
-}
-
-void rotate_clients(const Arg *arg)
-{
-    Client *c = next_tiled_client(first_monitor->clients);
-
-    if (!first_monitor->selected_client) {
-        return;
-    }
-    for (; c && next_tiled_client(c->next); c = next_tiled_client(c->next));
-    if (c) {
-        detach(first_monitor, c);
-        attach(first_monitor, c);
-        detach_stack(first_monitor, c);
-        attach_stack(first_monitor, c);
-        arrange(first_monitor);
-        focus(dpy, first_monitor, root, c);
-    }
 }
 
 void move_client_next(const Arg *arg)
@@ -857,19 +836,6 @@ void focus_next(const Arg *arg)
     }
 }
 
-void make_master(const Arg *arg)
-{
-    Client *c = first_monitor->selected_client;
-
-    if (!c || c->is_floating || c->is_fullscreen || c == next_tiled_client(first_monitor->clients))  {
-        return;
-    }
-    detach(first_monitor, c);
-    attach(first_monitor, c);
-    focus(dpy, first_monitor, root, c);
-    arrange(first_monitor);
-}
-
 void focus_previous(const Arg *arg)
 {
     if (!first_monitor->selected_client) {
@@ -1236,10 +1202,6 @@ void property_notify(XEvent *e)
     }
 }
 
-void quit(const Arg *arg)
-{
-    running = false;
-}
 
 void resize(Client *c, int x, int y, int w, int h, bool interact)
 {
@@ -2086,7 +2048,7 @@ int main(void)
     XEvent ev;
     /* Main event loop */
     XSync(dpy, False);
-    while (running && !XNextEvent(dpy, &ev)) {
+    while (!XNextEvent(dpy, &ev)) {
         if (handler[ev.type]) {
             /* Call handler */
             handler[ev.type](&ev);

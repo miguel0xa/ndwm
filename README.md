@@ -13,7 +13,7 @@ NDWM uses libx11 to communicate with the X server.
 ## Dependencies
 
 - C99 Compiler
-- GNU Make
+- GNU Make (build and install)
 - libx11
 - libxft
 
@@ -97,9 +97,7 @@ By default, MODKEY is the Super button (or Windows button).
 | MODKEY + Shift + Left  | Move window to left tag |
 | MODKEY + Shift + Right  | Move window to right tag |
 | MODKEY + v  | Move the client to the next position in the stack  |
-| MODKEY + r  | Rotate clients |
 | MODKEY + l  | Increase the width of the master window |
 | MODKEY + h  | Decrease the width of the master window |
-| MODKEY + z  | Turn the focused into the master window  |
 | MODKEY + Shift + r  | Quit ndwm |
 

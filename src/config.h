@@ -6,7 +6,6 @@
 
 static const unsigned int borderpx = 3;        /* Border pixel of windows */
 
-/* TODO: Color scheme configuration needs to be simplified. */
 static const char bar_background_color[] = "#1d2021"; 
 static const char bar_foreground_color[] = "#bbbbbb"; 
 static const char selected_tag_foreground_color[] = "#eeeeee";
@@ -14,8 +13,9 @@ static const char selected_tag_background_color[] = "#fe347e";
 static const char unfocused_client_border_color[] = "#572649";
 static const char focused_client_border_color[] = "#fe347e";
 
-static const char *fonts[] = { "Terminus (TTF):style=Medium:size=9", 
-                    "FontAwesome:style=Regular:size=9:antialias=true:autohint=true",
+static const char *fonts[] = { 
+    "Terminus (TTF):style=Medium:size=9", 
+    "FontAwesome:style=Regular:size=9:antialias=true:autohint=true",
 };
 
 static const bool top_bar             = true;
@@ -33,7 +33,6 @@ static const float master_factor = 0.52; /* Factor of master width size [0.05..0
 
 #define MODKEY Mod4Mask
 
-/* USER CONFIGURATION */
 /* ------------------------------------------------------------------------------------------ */
 
 static const char *colors[][3] = {
@@ -86,11 +85,8 @@ static const Key keys[] = {
     { MODKEY|ShiftMask,             XK_Right,  move_client_to_right_tag,       {0} },
     { MODKEY|ShiftMask,             XK_Left,   move_client_to_left_tag,        {0} },
     { MODKEY,                       XK_v,      move_client_next,               {0} },
-    { MODKEY,                       XK_r,      rotate_clients,                 {0} },
     { MODKEY,                       XK_l,      increase_master_width,          {0} },
     { MODKEY,                       XK_h,      decrease_master_width,          {0} },
-    { MODKEY,                       XK_z,      make_master,                    {0} },
-    { MODKEY|ShiftMask,             XK_r,      quit,                           {0} },
 };
 
 /* Button3 is Right Click, Button1 is Left Click, Button2 is Middle Click.
